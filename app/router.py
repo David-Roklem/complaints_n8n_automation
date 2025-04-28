@@ -4,7 +4,7 @@ import schemas
 import services.crud as crud
 from services import text_analyzer
 from database import db_helper
-from app.services.crud import complaint_create, complaint_update
+from services.crud import complaint_create, complaint_update
 
 router = APIRouter(tags=["Main"])
 
@@ -15,7 +15,7 @@ async def create_complaint(
     session: AsyncSession = Depends(db_helper.get_session_dependency),
 ):
     text = complaint_text.text
-    sentiment, category = await text_analyzer.get_prompt_features(text)
+    sentiment, category, is_spam = await text_analyzer.get_text_features(text)
 
     if all([sentiment, category]):
         complaint_data = {
@@ -23,6 +23,7 @@ async def create_complaint(
             "sentiment": sentiment.get("sentiment"),
             "status": "open",
             "category": category,
+            "is_spam": is_spam,
         }
         return await complaint_create(session, complaint_data)
     return {"text": "Error occured... Damn it!"}

@@ -1,16 +1,17 @@
 import httpx
-from utils import translate
+from services.utils import translate
 from config import settings
 
 
 async def analyze_sentiment(text: str) -> dict:
-    text_in_ru = await translate(text)
+    text_in_en = await translate(text)
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "https://api.apilayer.com/sentiment/analysis",
-                headers={"apikey": settings.SENTIMENT_API_KEY},
-                data=text_in_ru,
+                headers={"apikey": settings.APILAYER_KEY},
+                data=text_in_en,
+                timeout=20,
             )
             response.raise_for_status()
             sentiment = response.json()
@@ -42,6 +43,7 @@ async def analyze_category(text: str) -> str:
                     "messages": [{"role": "user", "content": prompt}],
                     "temperature": 0.0,
                 },
+                timeout=20,
             )
             response.raise_for_status()
             category = response.json()['choices'][0]['message']['content'].strip().lower()
@@ -53,5 +55,30 @@ async def analyze_category(text: str) -> str:
         return e
 
 
-async def get_prompt_features(text: str) -> tuple[str | None]:
-    return await analyze_sentiment(text), await analyze_category(text)
+async def get_text_features(text: str) -> tuple[str | None]:
+    return await analyze_sentiment(text), await analyze_category(text), await analyze_for_spam(text)
+
+
+async def analyze_for_spam(text: str) -> bool:
+    text_in_en = await translate(text)
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.apilayer.com/spamchecker",
+                headers={"apikey": settings.APILAYER_KEY},
+                params={"threshold": 3.0},
+                data=text_in_en,
+                timeout=20,
+            )
+            response.raise_for_status()
+            sentiment = response.json()
+            if sentiment and sentiment.get("is_spam"):
+                return True
+            return False
+
+    except httpx.HTTPStatusError as e:
+        return e
+
+
+# import asyncio
+# print(asyncio.run(analyze_for_spam("Не работает кнопка включения")))

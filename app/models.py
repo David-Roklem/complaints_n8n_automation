@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import String, Text, DateTime, func
+from sqlalchemy import String, Text, DateTime, func, Boolean
 from schemas import StatusEnum, CategoryEnum
 
 
@@ -27,6 +27,7 @@ class Complaint(Base):
     category: Mapped[str] = mapped_column(
         String(20), nullable=False, default=CategoryEnum.OTHER.value
     )
+    is_spam: Mapped[bool] = mapped_column(Boolean, nullable=True, default=False)
 
     def __repr__(self):
         return f"Complaint(id={self.id}, text={self.text})"

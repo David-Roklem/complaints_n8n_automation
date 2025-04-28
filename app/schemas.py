@@ -32,3 +32,4 @@ class ComplaintUpdate(BaseModel):
 class ComplaintResponse(ComplaintUpdate):
     sentiment: SentimentEnum
     category: CategoryEnum
+    is_spam: bool
