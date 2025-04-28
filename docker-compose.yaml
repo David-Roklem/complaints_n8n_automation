@@ -1,0 +1,33 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${API_PORT}:8000
+    volumes:
+      - ./app:/app
+    networks:
+      - backend
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    ports:
+      - "127.0.0.1:5678:5678"
+    networks:
+      - backend
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./local-files:/files
+    depends_on:
+      - "api"
+
+volumes:
+  n8n_data:
+
+networks:
+  backend:
+    driver: bridge
