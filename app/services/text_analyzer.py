@@ -51,8 +51,8 @@ async def analyze_category(text: str) -> str:
                 return category
             return "другое"
 
-    except httpx.HTTPStatusError as e:
-        return e
+    except httpx.HTTPStatusError:
+        return "другое"
 
 
 async def get_text_features(text: str) -> tuple[str | None]:
@@ -76,5 +76,5 @@ async def analyze_for_spam(text: str) -> bool:
                 return True
             return False
 
-    except httpx.HTTPStatusError as e:
-        return e
+    except httpx.HTTPStatusError:
+        return False
