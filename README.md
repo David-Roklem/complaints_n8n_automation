@@ -5,8 +5,10 @@
 взаимодействие с Телеграм и Google Sheets. Демонстрацию работы можно увидеть на [скринкасте](https://disk.yandex.ru/i/iTA-K8W5_aldcA) (для иллюстрации Schedule Trigger в n8n отрабатывает каждые 45 сек, а не ежечасно).
 
 Также реализована доп. проверка на спам:
-[](https://github.com/David-Roklem/Screenshots_screencasts/raw/main/Additional%20spam%20check%201)
-[](https://github.com/David-Roklem/Screenshots_screencasts/raw/main/Additional%20spam%20check%202.png)
+
+<img src="https://github.com/David-Roklem/complaints_n8n_automation/blob/main/Доп%20проверка%20на%20спам%201.png" alt="Описание изображения" width="800"/>
+
+<img src="https://github.com/David-Roklem/complaints_n8n_automation/blob/main/Доп%20проверка%20на%20спам%202.png" alt="Описание изображения" width="800"/>
 
 ## Начало работы
 Склонируйте данный репозиторий командой:
