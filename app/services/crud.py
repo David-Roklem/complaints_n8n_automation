@@ -7,6 +7,14 @@ from schemas import ComplaintUpdate, StatusEnum
 
 
 async def complaint_create(session: AsyncSession, complaint_data: dict) -> Complaint:
+    """
+    Создает новую жалобу в базе данных.
+
+    :param session: Асинхронная сессия SQLAlchemy для работы с базой данных.
+    :param complaint_data: Словарь с данными жалобы, которые необходимо сохранить.
+    :return: Созданная жалоба.
+    :raises HTTPException: Если произошла ошибка при работе с базой данных.
+    """
     try:
         complaint = Complaint(**complaint_data)
         session.add(complaint)
@@ -21,6 +29,14 @@ async def complaint_create(session: AsyncSession, complaint_data: dict) -> Compl
 
 
 async def complaint_update(session: AsyncSession, update_data: ComplaintUpdate) -> Complaint:
+    """
+    Обновляет существующую жалобу в базе данных, изменяя ее статус на 'closed'.
+
+    :param session: Асинхронная сессия SQLAlchemy для работы с базой данных.
+    :param update_data: Объект с данными для обновления жалобы.
+    :return: Обновленная жалоба.
+    :raises HTTPException: Если жалоба не найдена или произошла ошибка при работе с базой данных.
+    """
     try:
         # Находим существующую жалобу по ID
         stmt = select(Complaint).where(Complaint.id == update_data.id)
@@ -48,6 +64,12 @@ async def complaint_update(session: AsyncSession, update_data: ComplaintUpdate) 
 
 
 async def complaints_get(session: AsyncSession):
+    """
+    Получает все открытые жалобы, созданные за последний час.
+
+    :param session: Асинхронная сессия SQLAlchemy для работы с базой данных.
+    :return: Список открытых жалоб, созданных за последний час.
+    """
     # Определяем временной интервал (последний час).
     # Также отнимаю разницу между московским временем и UTC
     # Данный костыль обходит проблему работы в SQLite с timezone

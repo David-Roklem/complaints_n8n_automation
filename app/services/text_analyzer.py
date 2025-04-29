@@ -3,7 +3,13 @@ from services.utils import translate
 from config import settings
 
 
-async def analyze_sentiment(text: str) -> dict:
+async def analyze_sentiment(text: str) -> str:
+    """
+    Анализирует настроение текста с использованием внешнего API.
+
+    :param text: Текст, для которого необходимо определить настроение.
+    :return: Строка с названием настроения.
+    """
     text_in_en = await translate(text)
     try:
         async with httpx.AsyncClient() as client:
@@ -25,6 +31,12 @@ async def analyze_sentiment(text: str) -> dict:
 
 
 async def analyze_category(text: str) -> str:
+    """
+    Определяет категорию жалобы на основе текста.
+
+    :param text: Текст жалобы, для которого необходимо определить категорию.
+    :return: Категория жалобы (техническая, оплата или другое).
+    """
     prompt = (
         f"Определи категорию жалобы: '{text}'. "
         "Варианты: техническая, оплата, другое. "
@@ -56,11 +68,23 @@ async def analyze_category(text: str) -> str:
         return "другое"
 
 
-async def get_text_features(text: str) -> tuple[str | None]:
+async def get_text_features(text: str) -> tuple[str | bool]:
+    """
+    Получает характеристики текста, включая настроение, категорию и наличие спама.
+
+    :param text: Текст, для которого необходимо получить характеристики.
+    :return: Кортеж с результатами анализа: настроение, категория и наличие спама.
+    """
     return await analyze_sentiment(text), await analyze_category(text), await analyze_for_spam(text)
 
 
 async def analyze_for_spam(text: str) -> bool:
+    """
+    Проверяет текст на наличие спама с использованием внешнего API.
+
+    :param text: Текст, который необходимо проверить на спам.
+    :return: True, если текст является спамом, иначе False.
+    """
     text_in_en = await translate(text)
     try:
         async with httpx.AsyncClient() as client:
