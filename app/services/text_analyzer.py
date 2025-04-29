@@ -8,7 +8,7 @@ async def analyze_sentiment(text: str) -> dict:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "https://api.apilayer.com/sentiment/analysis",
+                "https://api.apilayer.com/sentiment/analysiss",
                 headers={"apikey": settings.APILAYER_KEY},
                 data=text_in_en,
                 timeout=20,
@@ -19,8 +19,8 @@ async def analyze_sentiment(text: str) -> dict:
                 return sentiment
             return "unknown"
 
-    except httpx.HTTPStatusError as e:
-        return e
+    except httpx.HTTPStatusError:
+        return "unknown"
 
 
 async def analyze_category(text: str) -> str:
