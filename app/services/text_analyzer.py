@@ -8,14 +8,15 @@ async def analyze_sentiment(text: str) -> dict:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "https://api.apilayer.com/sentiment/analysiss",
+                "https://api.apilayer.com/sentiment/analysis",
                 headers={"apikey": settings.APILAYER_KEY},
                 data=text_in_en,
                 timeout=20,
             )
             response.raise_for_status()
-            sentiment = response.json()
-            if sentiment.get("sentiment") in {"positive", "negative", "neutral"}:
+            response_body = response.json()
+            sentiment = response_body.get("sentiment")
+            if sentiment in {"positive", "negative", "neutral"}:
                 return sentiment
             return "unknown"
 

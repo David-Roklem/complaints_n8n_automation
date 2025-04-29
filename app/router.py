@@ -20,7 +20,7 @@ async def create_complaint(
     if all([sentiment, category]):
         complaint_data = {
             "text": text,
-            "sentiment": sentiment.get("sentiment"),
+            "sentiment": sentiment,
             "status": "open",
             "category": category,
             "is_spam": is_spam,
