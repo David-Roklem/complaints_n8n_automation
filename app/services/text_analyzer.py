@@ -78,7 +78,3 @@ async def analyze_for_spam(text: str) -> bool:
 
     except httpx.HTTPStatusError as e:
         return e
-
-
-# import asyncio
-# print(asyncio.run(analyze_for_spam("Не работает кнопка включения")))
